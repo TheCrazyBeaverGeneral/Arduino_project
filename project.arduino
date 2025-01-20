@@ -1,0 +1,59 @@
+#include <WiFi.h>
+#include <WebServer.h>
+#include <SPI.h>
+#include <MFRC522.h>
+
+const char* ssid = "EICT-021";      // Replace with your WiFi SSID
+const char* password = "EICT-021";  // Replace with your WiFi Password
+
+#define RST_PIN 4
+#define SS_PIN 5
+MFRC522 mfrc522(SS_PIN, RST_PIN);
+
+WebServer server(80);
+
+// HTML files as string literals
+String getHomePage() {
+  return "<!DOCTYPE html><html lang='en'><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'><title>RFID Home</title><style>body { font-family: Arial, sans-serif; background-color: #f4f4f4; } h1 { text-align: center; color: #4CAF50; } nav { text-align: center; margin-top: 20px; } nav a { margin: 10px; font-size: 18px; color: #4CAF50; text-decoration: none; } nav a:hover { color: #45a049; }</style></head><body><h1>Welcome to the RFID Web Interface</h1><nav><a href='/about'>About</a><a href='/contact'>Contact</a></nav><p style='text-align: center;'>Scan your RFID tag to get started!</p></body></html>";
+}
+
+String getAboutPage() {
+  return "<!DOCTYPE html><html lang='en'><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'><title>About RFID System</title><style>body { font-family: Arial, sans-serif; background-color: #f4f4f4; } h1 { text-align: center; color: #4CAF50; } nav { text-align: center; margin-top: 20px; } nav a { margin: 10px; font-size: 18px; color: #4CAF50; text-decoration: none; } nav a:hover { color: #45a049; }</style></head><body><h1>About the RFID System</h1><p style='text-align: center;'>This RFID system allows you to scan RFID tags and log information for various uses.</p><nav><a href='/'>Home</a><a href='/contact'>Contact</a></nav></body></html>";
+}
+
+String getContactPage() {
+  return "<!DOCTYPE html><html lang='en'><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'><title>Contact</title><style>body { font-family: Arial, sans-serif; background-color: #f4f4f4; } h1 { text-align: center; color: #4CAF50; } nav { text-align: center; margin-top: 20px; } nav a { margin: 10px; font-size: 18px; color: #4CAF50; text-decoration: none; } nav a:hover { color: #45a049; }</style></head><body><h1>Contact Information</h1><p style='text-align: center;'>You can contact us via email: <strong>support@rfidsystem.com</strong></p><nav><a href='/'>Home</a><a href='/about'>About</a></nav></body></html>";
+}
+
+void setup() {
+  Serial.begin(115200);
+  SPI.begin();
+  mfrc522.PCD_Init();
+  WiFi.begin(ssid, password);
+
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+
+  Serial.println("\nConnected to WiFi");
+  Serial.print("IP Address: ");
+  Serial.println(WiFi.localIP());
+
+  // Define URL routes for the pages
+  server.on("/", []() {
+    server.send(200, "text/html", getHomePage());
+  });
+  server.on("/about", []() {
+    server.send(200, "text/html", getAboutPage());
+  });
+  server.on("/contact", []() {
+    server.send(200, "text/html", getContactPage());
+  });
+
+  server.begin();
+}
+
+void loop() {
+  server.handleClient();
+}
