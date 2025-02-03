@@ -1,0 +1,11 @@
+lijn 11
+hier moet je de wifi instellingen goed neerzetten, anders geen internet voor de esp32
+
+"// WiFi credentials
+const char* ssid = "iPhone van Donny";
+const char* password = "peepeepee";"
+
+C++ met html en javascript moet op een gestructeerde manier neergezet worden!
+voorbeeld is
+"<tbody id='tagTable'>";" double quotes en intendentation moet perfect zijn, anders wilt de ESP32 niet op de juiste manier werken + bugs.
+
