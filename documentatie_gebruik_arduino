@@ -9,3 +9,14 @@ C++ met html en javascript moet op een gestructeerde manier neergezet worden!
 voorbeeld is
 "<tbody id='tagTable'>";" double quotes en intendentation moet perfect zijn, anders wilt de ESP32 niet op de juiste manier werken + bugs.
 
+waar de kabels daadwerkelijk naartoe moeten.
+
+``**RFID (MFRC522)** naar **ESP32**:
+
+- SDA → GPIO 5
+- SCK → GPIO 18
+- MOSI → GPIO 23
+- MISO → GPIO 19
+- GND → GND
+- RST → GPIO 4
+- 3.3V → 3.3V`
